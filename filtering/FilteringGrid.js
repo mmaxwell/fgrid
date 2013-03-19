@@ -17,9 +17,10 @@ define([
             }
 
             if (this.store) {
-                this.renderArray(this.store.data);
+                this.renderArray(this.store.query());
             }
         },
+        listType: 'grid',
         filter: function (criteria) {
             // summary:
             //      Filters data based on given criteria.

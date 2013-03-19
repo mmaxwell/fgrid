@@ -14,7 +14,7 @@ define([
         allData: [], // All data first rendered or changed via setData.
         filterTimeout: 250, // Timeout between key presses where data changes.
         minLength: 2, // Minimum length of fitlering criteria before filtering happens.
-        listType: 'filteringList',
+        listType: 'list',
         buildRendering: function () {
             var criteria;
             this.inherited(arguments);
