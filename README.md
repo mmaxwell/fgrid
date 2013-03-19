@@ -1,10 +1,10 @@
 # FilteringGrid
 
-FilteringGrid is an extension of dGrid that allows you to filter the contents of a grid based on specified criteria.  FilteringGrid is compatible with any store that implements a @query@ method.
+FilteringGrid is an extension of dGrid that allows you to filter the contents of a grid based on specified criteria.  FilteringGrid is compatible with any store that implements a <code>query</code> method.
 
 # Using FilteringGrid
 
-@
+<code>
 require(["filtering/FilteringGrid", "dojo/store/Memory"], function (FilteringGrid, Memory) {
 	var data = [{
 	        id: '1',
@@ -43,9 +43,9 @@ require(["filtering/FilteringGrid", "dojo/store/Memory"], function (FilteringGri
 		queryProperties: ["fullName", "company"]
 	}, "grid");
 });
-@
+</code>
 
-As you type in the criteria field, you will see that the grid filters based on the properties you passed in @queryProperties@.  If no @queryProperties@ is provided, it will default to the store's @idProperty@.
+As you type in the criteria field, you will see that the grid filters based on the properties you passed in <code>queryProperties</code>.  If no <code>queryProperties</code> is provided, it will default to the store's <code>idProperty</code>.
 
 # Supported Options
 
@@ -58,4 +58,4 @@ As you type in the criteria field, you will see that the grid filters based on t
 	
 # FilteringList
 
-This grid is a subclass of @FilteringList@.  @FilteringList@ is the exact same as @FilteringGrid@ with the exception of it accepts a flat array of data and has a @setData@ method, which will set the data of the list to the provided array.
+This grid is a subclass of <code>FilteringList</code>.  <code>FilteringList</code> is the exact same as <code>FilteringGrid</code> with the exception of it accepts a flat array of data and has a <code>setData</code> method, which will set the data of the list to the provided array.
