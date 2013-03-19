@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>win/widget/grid/FilteringList test</title>
+    <link rel="stylesheet" href="../resources/main.css">
+
+</head>
+<body class="claro">
+    <div id="grid"></div>
+    <script src="../dojo/dojo.js" data-dojo-config="async: 1"></script>
+    <script>
+        var grid, ready = false;
+        require([
+            'filtering/FilteringGrid',
+            'dojo/store/Memory'
+        ], function (FilteringGrid, Memory) {
+            var data = [{
+                    id: '1',
+                    fullName: 'Matthew Maxwell',
+                    company: 'SitePen, Inc.'
+                }, {
+                    id: '2',
+                    fullName: 'Bryan Forbes',
+                    company: 'SitePen, Inc.'
+                }, {
+                    id: '3',
+                    fullName: 'Bryan Johnson',
+                    company: 'National'
+                }, {
+                    id: '4',
+                    fullName: 'Dylan Schiemann',
+                    company: 'SitePen, Inc.'
+                }, {
+                    id: '5',
+                    fullName: 'Matt Person',
+                    company: 'Sample, Inc.'
+                }, {
+                    id: '6',
+                    fullName: 'Jimmy Smith',
+                    company: "Smith's Hot Dogs and Jerky"
+                }],
+                store = new Memory({data:data});
+
+            grid = new FilteringGrid({
+                store: store,
+                columns: {
+                    id: "ID",
+                    fullName: "Full Name",
+                    company: "Company"
+                },
+                queryProperties: ['fullName', 'company']
+            }, 'grid');
+
+            ready = true;
+        });
+    </script>
+</body>
+</html>
