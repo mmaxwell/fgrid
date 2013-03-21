@@ -49,13 +49,23 @@ As you type in the criteria field, you will see that the grid filters based on t
 
 # Supported Options
 
-* caseSensitive
+* <code>caseSensitive</code>
 	If the search will be case sensitive
-* filterTimeout
+* <code>filterTimeout</code>
 	Time in milliseconds before a filtering will be attempted.  This will prevent multiple filter events from firing in rapid succession.
-* minLength
+* <code>minLength</code>
 	Minimum length of criteria before filtering happens.  If the length of the criteria is lower than this threshold, the grid will reset.
+* <code>hasSearchBar</code>
+	Whether the search bar is present or not.
+
+# Methods
+* <code>filter</code>
+	Filter the grid's contents.  Accepts a string.  Does not have to be an exact match.
+* <code>toggleSearchBar</code>
+	Toggles the search bar.
+* <code>set</code>
+	Used as <code>set('property', 'value')</code>.  Can be used to set a number of properties for the grid.  This includes <code>hasSearchBar</code>.
 	
 # FilteringList
 
-This grid is a subclass of <code>FilteringList</code>.  <code>FilteringList</code> is the exact same as <code>FilteringGrid</code> with the exception of it accepts a flat array of data and has a <code>setData</code> method, which will set the data of the list to the provided array.
+This grid is a subclass of <code>FilteringList</code>.  <code>FilteringList</code> is the exact same as <code>FilteringGrid</code> except it expects a <code>renderRow</code> method.
