@@ -68,4 +68,4 @@ As you type in the criteria field, you will see that the grid filters based on t
 	
 # FilteringList
 
-This grid is a subclass of <code>FilteringList</code>.  <code>FilteringList</code> is the exact same as <code>FilteringGrid</code> except it expects a <code>renderRow</code> method.
+This grid is a subclass of <code>FilteringList</code>.  <code>FilteringList</code> is the exact same as <code>FilteringGrid</code> except it expects a <code>renderRow</code> method and only renders a single row as a list of items.
