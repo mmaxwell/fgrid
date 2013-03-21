@@ -2,28 +2,44 @@ define([
     'dojo/_base/declare',
     'dojo/_base/Deferred',
     'dojo/_base/lang',
+    'dojo/dom-class',
     'dojo/dom-construct',
+    'dojo/string',
     'dojo/when',
-    'dgrid/List',
+    'dgrid/OnDemandList',
     'dgrid/util/misc',
     'dijit/form/TextBox'
-], function (declare, Deferred, lang, domConstruct, when, List, miscUtil, TextBox) {
+], function (declare, Deferred, lang, domClass, domConstruct, string, when, List, miscUtil, TextBox) {
     return declare(List, {
         caseSensitive: false, // If true, the search will be case sensitive.
         currentData: [], // Currently displayed data.
         allData: [], // All data first rendered or changed via setData.
         filterTimeout: 250, // Timeout between key presses where data changes.
         minLength: 2, // Minimum length of fitlering criteria before filtering happens.
+        hasSearchBar: true, // Whether or not to include search bar.  If this is false, filter will have to be called manually.
         listType: 'list',
+        queryProperties: [], // Properties to be queried when a filter occurs.  If this remains an empty array, it will default to the store's idProperty.
         buildRendering: function () {
-            var criteria;
             this.inherited(arguments);
 
-            criteria = new TextBox({
+            if (this.hasSearchBar) {
+                this._createSearchBar();
+            }
+
+            if (!this.queryProperties.length && this.store) {
+                this.queryProperties.push(this.store.idProperty);
+            }
+        },
+        _createSearchBar: function () {
+            // summary:
+            //      Creates a search bar and appends it directly before the list.
+            var criteria = this.criteria = new TextBox({
                 style: {
                     width: this.domNode.style.width || '100%' // Do we really want to do this?
                 }
-            });
+            }),
+            wrapper;
+
             criteria.set('intermediateChanges', true);
             criteria.watch('value', miscUtil.debounce(function (prop, oldValue, newValue) {
                 if (newValue.length < this.minLength) {
@@ -36,38 +52,85 @@ define([
                 this.filter(newValue);
             }, this, this.filterTimeout));
 
-            domConstruct.place(criteria.domNode, this.domNode, 'before');
-        },
-        filter: function (criteria) {
-            // summary:
-            //      Filters data in grid based on given criteria.
-            var deferred = new Deferred();
+            // Wrap current domNode in a wrapper div.  This will allow list.domNode to return everything,
+            // including the search bar.
+            wrapper = document.createElement('div');
+            wrapper.appendChild(criteria.domNode);
 
-            // Asynchronously filter in case the data set is large.
+            domConstruct.place(wrapper, this.domNode, 'before');
+            this.oldDomNode = this.domNode;
+            wrapper.appendChild(this.domNode);
+            this.domNode = wrapper;
+
+            if (this.className) {
+                domClass.add(this.domNode, this.className);
+            }
+        },
+        _setHasSearchBar: function (hasSearchBar) {
+            // summary:
+            //      Sets the hasSearchBar property.  If true, a search bar will be created if
+            //      it does not already exist.  If false, the search bar will be destroyed if
+            //      it exists.
+            if (hasSearchBar === this.hasSearchBar) {
+                return;
+            }
+
+            this.hasSearchBar = hasSearchBar;
+
+            if (!hasSearchBar) {
+                this.criteria.destroyRecursive();
+                domConstruct.place(this.oldDomNode, this.domNode, 'before');
+                domConstruct.destroy(this.domNode);
+                this.domNode = this.oldDomNode;
+                this.oldDomNode = null;
+
+                if (this.className) {
+                    domClass.add(this.domNode, this.className);
+                }
+            } else {
+                this._createSearchBar();
+            }
+        },
+        filter: function (text) {
+            // summary:
+            //      Filters data based on given criteria.
+            var deferred = new Deferred(),
+                criteria = string.trim(text);
+
+            if (!criteria) {
+                return;
+            }
+
+            if (criteria.length < this.minLength) {
+                return;
+            }
+
+            // Asynchronously filter in case there are a lot of queryProperties
+            // and/or a large amount of data in the store.
             // This will prevent the page from hanging.
             setTimeout(lang.hitch(this, function () {
                 var results = [],
-                    data = this.allData,
-                    match = new RegExp('\\b' + criteria, !this.caseSensitive ? 'i' : ''),
-                    item, i, total;
+                    queryProperties = this.queryProperties,
+                    i, total, query;
 
-                for (i = 0, total = data.length; i < total; i++) {
-                    item = data[i];
+                // Query for every queryProperty provided, but stop on the first match.
+                for (i = 0, total = queryProperties.length; i < total; i++) {
+                    query = {};
+                    query[queryProperties[i]] = new RegExp('\\b' + criteria, 'i');
+                    results = this.store.query(query);
 
-                    if (match.test(item)) {
-                        results.push(item);
+                    if (results.length) {
+                        break;
                     }
                 }
 
-                deferred.resolve(results);
+                deferred.resolve(query);
             }), 0);
 
-            when(deferred, lang.hitch(this, function (results) {
+            when(deferred, lang.hitch(this, function (query) {
                 this.clear();
 
-                if (results.length) {
-                    this.renderArray(results);
-                }
+                this.set('query', query);
 
                 this.hasChanged = true;
             }));
@@ -77,24 +140,14 @@ define([
             //      Resets list to original data (or the latest data that the list was set to).
             this.clear();
             this.hasChanged = false;
-            this.renderArray(this.allData);
+            this.set('query', {});
         },
         setData: function (data) {
             // summary:
             //      Sets overall data of the list.  Will refresh the list.
             this.clear();
             this.allData = data;
-            this.renderArray(data);
-        },
-        renderArray: function (data) {
-            // summary:
-            //      Sets all data if it is not set and stores currently displayed data.
-            if (!this.allData.length) {
-                this.allData = data;
-            }
-
-            this.data = data;
-            this.inherited(arguments);
+            this.set('query', {});
         },
         clear: function () {
             // summary:
