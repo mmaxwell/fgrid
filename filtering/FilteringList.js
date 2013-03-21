@@ -66,6 +66,11 @@ define([
                 domClass.add(this.domNode, this.className);
             }
         },
+        toggleSearchBar: function () {
+            // summary:
+            //      Toggles the search bar.
+            this.set('hasSearchBar', !this.hasSearchBar);
+        },
         _setHasSearchBar: function (hasSearchBar) {
             // summary:
             //      Sets the hasSearchBar property.  If true, a search bar will be created if
@@ -116,7 +121,7 @@ define([
                 // Query for every queryProperty provided, but stop on the first match.
                 for (i = 0, total = queryProperties.length; i < total; i++) {
                     query = {};
-                    query[queryProperties[i]] = new RegExp('\\b' + criteria, 'i');
+                    query[queryProperties[i]] = new RegExp('\\b' + criteria, this.caseSensitive ? '': 'i');
                     results = this.store.query(query);
 
                     if (results.length) {
@@ -140,13 +145,6 @@ define([
             //      Resets list to original data (or the latest data that the list was set to).
             this.clear();
             this.hasChanged = false;
-            this.set('query', {});
-        },
-        setData: function (data) {
-            // summary:
-            //      Sets overall data of the list.  Will refresh the list.
-            this.clear();
-            this.allData = data;
             this.set('query', {});
         },
         clear: function () {
