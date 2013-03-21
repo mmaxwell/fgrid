@@ -2,6 +2,16 @@
 
 FilteringGrid is an extension of dGrid that allows you to filter the contents of a grid based on specified criteria.  FilteringGrid is compatible with any store that implements a <code>query</code> method.
 
+# Dependencies
+
+FilteringGrid depends on the following libraries, which are included as submodules of this repository:
+
+* dojo
+* dijit
+* dgrid
+* put-selector
+* xstyle
+
 # Using FilteringGrid
 
 <pre><code>
