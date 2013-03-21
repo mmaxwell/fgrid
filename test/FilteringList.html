@@ -28,7 +28,7 @@
             'filtering/FilteringList',
             'dojo/dom',
             'dojo/on',
-			'dojo/store/Memory'
+            'dojo/store/Memory'
         ], function (FilteringList, dom, on, Memory) {
             var data = [{
                     id: '1',
@@ -55,7 +55,7 @@
                     fullName: 'Jimmy Smith',
                     company: "Smith's Hot Dogs and Jerky"
                 }],
-				store = new Memory({data: data}),
+                store = new Memory({data: data}),
                 renderRow = function (object) {
                     var row = document.createElement("div");
                     row.innerHTML = object.fullName + ' - ' + object.company;
@@ -63,13 +63,13 @@
                 };
 
             plainList = new FilteringList({
-				store: store,
-				queryProperties: ['fullName', 'company'],
-				renderRow: renderRow,
+                store: store,
+                queryProperties: ['fullName', 'company'],
+                renderRow: renderRow,
                 columns: {
                     fullName: 'Full Name'
                 }
-			}, 'plainList');
+            }, 'plainList');
 
             plainList.startup();
 
