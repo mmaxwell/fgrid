@@ -12,35 +12,22 @@ define([
 ], function (declare, Deferred, lang, domClass, domConstruct, string, when, List, miscUtil, TextBox) {
     return declare(List, {
         caseSensitive: false, // If true, the search will be case sensitive.
-        currentData: [], // Currently displayed data.
-        allData: [], // All data first rendered or changed via setData.
         filterTimeout: 250, // Timeout between key presses where data changes.
         minLength: 2, // Minimum length of fitlering criteria before filtering happens.
         hasSearchBar: true, // Whether or not to include search bar.  If this is false, filter will have to be called manually.
-        listType: 'list',
         queryProperties: [], // Properties to be queried when a filter occurs.  If this remains an empty array, it will default to the store's idProperty.
         buildRendering: function () {
+            var criteria, wrapper;
+
             this.inherited(arguments);
 
-            if (this.hasSearchBar) {
-                this._createSearchBar();
-            }
-
-            if (!this.queryProperties.length && this.store) {
-                this.queryProperties.push(this.store.idProperty);
-            }
-        },
-        _createSearchBar: function () {
-            // summary:
-            //      Creates a search bar and appends it directly before the list.
-            var criteria = this.criteria = new TextBox({
+            criteria = this.criteria = new TextBox({
+                intermediateChanges: true,
                 style: {
                     width: this.domNode.style.width || '100%' // Do we really want to do this?
                 }
-            }),
-            wrapper;
+            });
 
-            criteria.set('intermediateChanges', true);
             criteria.watch('value', miscUtil.debounce(function (prop, oldValue, newValue) {
                 if (newValue.length < this.minLength) {
                     if (this.hasChanged) {
@@ -65,6 +52,12 @@ define([
             if (this.className) {
                 domClass.add(this.domNode, this.className);
             }
+
+            this.set('hasSearchBar', this.hasSearchBar);
+
+            if (!this.queryProperties.length && this.store) {
+                this.queryProperties.push(this.store.idProperty);
+            }
         },
         toggleSearchBar: function () {
             // summary:
@@ -76,25 +69,13 @@ define([
             //      Sets the hasSearchBar property.  If true, a search bar will be created if
             //      it does not already exist.  If false, the search bar will be destroyed if
             //      it exists.
-            if (hasSearchBar === this.hasSearchBar) {
+            if (hasSearchBar === this.hasSearchBar && this.started) {
                 return;
             }
 
             this.hasSearchBar = hasSearchBar;
 
-            if (!hasSearchBar) {
-                this.criteria.destroyRecursive();
-                domConstruct.place(this.oldDomNode, this.domNode, 'before');
-                domConstruct.destroy(this.domNode);
-                this.domNode = this.oldDomNode;
-                this.oldDomNode = null;
-
-                if (this.className) {
-                    domClass.add(this.domNode, this.className);
-                }
-            } else {
-                this._createSearchBar();
-            }
+            domClass[hasSearchBar ? 'remove' : 'add'](this.criteria.domNode, 'dijitHidden');
         },
         filter: function (text) {
             // summary:
@@ -121,7 +102,9 @@ define([
                 // Query for every queryProperty provided, but stop on the first match.
                 for (i = 0, total = queryProperties.length; i < total; i++) {
                     query = {};
-                    query[queryProperties[i]] = new RegExp('\\b' + criteria, this.caseSensitive ? '': 'i');
+
+                    // TODO: Does this need to escape RegExp relevant characters?
+                    query[queryProperties[i]] = new RegExp('\\b' + criteria, this.caseSensitive ? '' : 'i');
                     results = this.store.query(query);
 
                     if (results.length) {
