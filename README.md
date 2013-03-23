@@ -1,6 +1,6 @@
 # FilteringGrid
 
-FilteringGrid is an extension of dGrid that allows you to filter the contents of a grid based on specified criteria.  FilteringGrid is compatible with any store that implements a <code>query</code> method.
+FilteringGrid is an extension of dGrid that allows you to filter the contents of a grid based on specified criteria.  FilteringGrid is compatible with any <code>SimpleQueryEngine</code> store.
 
 # Dependencies
 
