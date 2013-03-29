@@ -22,10 +22,7 @@ define([
             this.inherited(arguments);
 
             criteria = this.criteria = new TextBox({
-                intermediateChanges: true,
-                style: {
-                    width: this.domNode.style.width || '100%' // Do we really want to do this?
-                }
+                intermediateChanges: true
             });
 
             criteria.watch('value', miscUtil.debounce(function (prop, oldValue, newValue) {
@@ -122,6 +119,8 @@ define([
 
                 this.hasChanged = true;
             }));
+
+            return deferred.promise;
         },
         reset: function () {
             // summary:
