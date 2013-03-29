@@ -70,7 +70,7 @@ As you type in the criteria field, you will see that the grid filters based on t
 
 # Methods
 * <code>filter</code>
-    Filter the grid's contents.  Accepts a string.  Does not have to be an exact match.
+    Filter the grid's contents.  Accepts a string.  Does not have to be an exact match.  Returns a promise that resolves after the filtering has been completed.  This promise will resolve to the query that the grid will be set to.
 * <code>toggleSearchBar</code>
     Toggles the search bar.
 * <code>set</code>
