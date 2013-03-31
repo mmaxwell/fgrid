@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>FilteringList test</title>
+	<link rel="stylesheet" href="resources/main.css">
+
+</head>
+<body class="claro">
+	<h2>Filter on fullName and company</h2>
+	<div id="plainGrid"></div>
+
+	<h2>No search bar</h2>
+	<div id="noSearchBar"></div>
+	<button id="filterNoSearchBar">Filter to for 'Matt'</button> <button id="resetNoSearchBar">Reset</button>
+
+	<h2>Case Sensitive Search</h2>
+	<div id="caseSensitive"></div>
+
+	<h2>Toggle Search Bar</h2>
+	<div id="toggleSearchBar"></div>
+	<button id="toggleSearchBarButton">Toggle</button>
+
+	<script>
+		var dojoConfig = {
+			packages: [{
+				name: "fgrid",
+				location: "../fgrid"
+			}]
+		};
+	</script>
+	
+	<script src="../../dojo/dojo.js" data-dojo-config="async: 1"></script>
+	<script>
+		var plainList, noSearchBar, caseSensitive, toggleSearchBar;
+
+		require([
+			'fgrid/Grid',
+			'dojo/dom',
+			'dojo/on',
+			'dojo/store/Memory'
+		], function (Grid, dom, on, Memory) {
+			var data = [{
+					id: '1',
+					fullName: 'Matt',
+					company: 'SitePen, Inc.'
+				}, {
+					id: '2',
+					fullName: 'Bryan Person',
+					company: 'SitePen, Inc.'
+				}, {
+					id: '3',
+					fullName: 'Bryan Johnson',
+					company: 'National'
+				}, {
+					id: '4',
+					fullName: 'Donald Person',
+					company: 'SitePen, Inc.'
+				}, {
+					id: '5',
+					fullName: 'Matt Person',
+					company: 'Sample, Inc.'
+				}, {
+					id: '6',
+					fullName: 'Jimmy Smith',
+					company: "Smith's Hot Dogs and Jerky"
+				}],
+				store = new Memory({data:data});
+
+			plainGrid = new Grid({
+				store: store,
+				columns: {
+					id: "ID",
+					fullName: "Full Name",
+					company: "Company"
+				},
+				queryProperties: ['fullName', 'company']
+			}, 'plainGrid');
+
+			plainGrid.startup();
+
+			noSearchBar = new Grid({
+				store: store,
+				columns: {
+					id: "ID",
+					fullName: "Full Name",
+					company: "Company"
+				},
+				queryProperties: ['fullName', 'company'],
+				hasSearchBar: false
+			}, 'noSearchBar');
+
+			noSearchBar.startup();
+
+			on(dom.byId('filterNoSearchBar'), 'click', function () {
+				noSearchBar.filter('Matt');
+			});
+
+			on(dom.byId('resetNoSearchBar'), 'click', function () {
+				noSearchBar.reset();
+			});
+
+			caseSensitive = new Grid({
+				store: store,
+				columns: {
+					id: "ID",
+					fullName: "Full Name",
+					company: "Company"
+				},
+				queryProperties: ['fullName', 'company'],
+				caseSensitive: true
+			}, 'caseSensitive');
+
+			caseSensitive.startup();
+
+			toggleSearchBar = new Grid({
+				store: store,
+				columns: {
+					id: "ID",
+					fullName: "Full Name",
+					company: "Company"
+				},
+				queryProperties: ['fullName', 'company']
+			}, 'toggleSearchBar');
+
+			toggleSearchBar.startup();
+
+			on(dom.byId('toggleSearchBarButton'), 'click', function () {
+				toggleSearchBar.toggleSearchBar();
+			});
+		});
+	</script>
+</body>
+</html>

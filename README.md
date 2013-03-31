@@ -1,10 +1,10 @@
-# FilteringGrid
+# fgrid
 
-FilteringGrid is an extension of dGrid that allows you to filter the contents of a grid based on specified criteria.  FilteringGrid is compatible with any <code>SimpleQueryEngine</code> store.
+fgrid is an extension of dgrid that allows you to filter the contents of a grid based on specified criteria.  fgrid is compatible with any <code>SimpleQueryEngine</code> store.
 
 # Dependencies
 
-FilteringGrid depends on the following libraries, which are included as submodules of this repository:
+fgrid depends on the following libraries:
 
 * dojo
 * dijit
@@ -12,10 +12,10 @@ FilteringGrid depends on the following libraries, which are included as submodul
 * put-selector
 * xstyle
 
-# Using FilteringGrid
+# Using fgrid
 
 <pre><code>
-require(["filtering/FilteringGrid", "dojo/store/Memory"], function (FilteringGrid, Memory) {
+require(["fgrid/Grid", "dojo/store/Memory"], function (Grid, Memory) {
     var data = [{
         id: '1',
         fullName: 'Matt',
@@ -43,7 +43,7 @@ require(["filtering/FilteringGrid", "dojo/store/Memory"], function (FilteringGri
     }],
     store = new Memory({data:data});
 
-    var grid = new FilteringGrid({
+    var grid = new Grid({
         store: store,
         columns: {
             id: "ID",
@@ -76,6 +76,6 @@ As you type in the criteria field, you will see that the grid filters based on t
 * <code>set</code>
     Used as <code>set('property', 'value')</code>.  Can be used to set a number of properties for the grid.  This includes <code>hasSearchBar</code>.
     
-# FilteringList
+# List
 
-This grid is a subclass of <code>FilteringList</code>.  <code>FilteringList</code> is the exact same as <code>FilteringGrid</code> except it expects a <code>renderRow</code> method and only renders a single row as a list of items.
+This grid is a subclass of <code>List</code>.  <code>List</code> is the exact same as <code>Grid</code> except it expects a <code>renderRow</code> method and only renders a single row as a list of items.

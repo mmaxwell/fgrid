@@ -1,0 +1,26 @@
+{
+  "name": "fgrid",
+  "author": "Matthew Maxwell",
+  "version": "0.1.2",
+  "description": "A dgrid extension that allows a user to filter the grid based on provided criteria.",
+  "licenses": [
+     {
+         "type": "AFLv2.1",
+         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L43"
+     },
+     {
+         "type": "BSD",
+         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L13"
+     }
+  ],
+ "maintainers": [
+  	{
+  		"name": "Matthew Maxwell",
+  		"email": "mmaxwell.droid@gmail.com"
+  	}
+  ],
+  "directories": {
+    "lib": "."
+  },
+  "main": "./List"
+}
