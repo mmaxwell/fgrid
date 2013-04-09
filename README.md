@@ -79,3 +79,6 @@ As you type in the criteria field, you will see that the grid filters based on t
 # List
 
 This grid is a subclass of <code>List</code>.  <code>List</code> is the exact same as <code>Grid</code> except it expects a <code>renderRow</code> method and only renders a single row as a list of items.
+
+# License
+New BSD License © 2012–2013 Matthew Maxwell http://www.matthewcmaxwell.com. Released under Dojo Foundation CLA.
